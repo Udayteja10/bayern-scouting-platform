@@ -1,0 +1,77 @@
+spring:
+  application:
+    name: fcbayern-platform
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/fcbayern_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: fcbayern
+    password: fcbayern_pass
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+        use_sql_comments: true
+    open-in-view: false
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
+
+app:
+  jwt:
+    secret: ${APP_JWT_SECRET:fcbayern_super_secret_jwt_key_2024_enterprise_platform_v1}
+    expiration-ms: ${APP_JWT_EXPIRATION_MS:86400000}
+    refresh-expiration-ms: 604800000
+
+  admin:
+    email: ${APP_ADMIN_EMAIL:admin@fcbayern.de}
+    password: ${APP_ADMIN_PASSWORD:Bayern2024!}
+
+  sportmonks:
+    base-url: https://api.sportmonks.com/v3
+    api-key: ${SPORTMONKS_API_KEY:your_sportmonks_api_key}
+    bayern-team-id: 5
+    top-leagues: "8,72,82,301,564"  # PL, Bundesliga, Serie A, La Liga, Ligue 1
+
+  cors:
+    allowed-origins: "http://localhost:5173,http://localhost:80,http://localhost"
+
+  sync:
+    squad-cron: "0 0 3 * * *"
+    league-players-cron: "0 0 4 * * MON"
+    injury-cron: "0 0 */6 * * *"
+    transfer-cron: "0 0 8 * * *"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.fcbayern: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: INFO
