@@ -22,6 +22,7 @@ com/fcbayern/platform/entity/League$LeagueBuilder.class
 com/fcbayern/platform/entity/Season.class
 com/fcbayern/platform/repository/UserRepository.class
 com/fcbayern/platform/dto/DashboardSummaryDto$SyncStatusDto$SyncStatusDtoBuilder.class
+com/fcbayern/platform/service/SportmonksService$PlayerProfile.class
 com/fcbayern/platform/dto/DashboardSummaryDto$AlertDto.class
 com/fcbayern/platform/dto/DashboardSummaryDto.class
 com/fcbayern/platform/dto/SyncLogDto.class

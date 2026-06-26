@@ -34,12 +34,12 @@ public class AuthService {
             throw new BadRequestException("Email already registered: " + request.getEmail());
         }
         User user = User.builder()
-            .email(request.getEmail())
-            .password(passwordEncoder.encode(request.getPassword()))
-            .fullName(request.getFullName())
-            .role(request.getRole())
-            .active(true)
-            .build();
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .fullName(request.getFullName())
+                .role(request.getRole())
+                .active(true)
+                .build();
         user = userRepository.save(user);
         String accessToken = jwtTokenProvider.generateTokenFromEmail(user.getEmail());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getEmail());
@@ -48,12 +48,16 @@ public class AuthService {
 
     public AuthResponse login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
-        );
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()));
+
         String accessToken = jwtTokenProvider.generateToken(authentication);
         String refreshToken = jwtTokenProvider.generateRefreshToken(request.getEmail());
+
         User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new BadRequestException("User not found"));
+                .orElseThrow(() -> new BadRequestException("User not found"));
+
         return buildAuthResponse(user, accessToken, refreshToken);
     }
 
@@ -63,7 +67,7 @@ public class AuthService {
         }
         String email = jwtTokenProvider.getEmailFromToken(refreshToken);
         User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new BadRequestException("User not found"));
+                .orElseThrow(() -> new BadRequestException("User not found"));
         String newAccessToken = jwtTokenProvider.generateTokenFromEmail(email);
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(email);
         return buildAuthResponse(user, newAccessToken, newRefreshToken);
@@ -71,14 +75,14 @@ public class AuthService {
 
     private AuthResponse buildAuthResponse(User user, String accessToken, String refreshToken) {
         return AuthResponse.builder()
-            .accessToken(accessToken)
-            .refreshToken(refreshToken)
-            .tokenType("Bearer")
-            .userId(user.getId())
-            .email(user.getEmail())
-            .fullName(user.getFullName())
-            .role(user.getRole())
-            .expiresIn(expirationMs)
-            .build();
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                .userId(user.getId())
+                .email(user.getEmail())
+                .fullName(user.getFullName())
+                .role(user.getRole())
+                .expiresIn(expirationMs)
+                .build();
     }
 }
